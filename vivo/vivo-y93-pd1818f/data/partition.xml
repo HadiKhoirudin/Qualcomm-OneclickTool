@@ -1,0 +1,13 @@
+Version 2.15
+Failed to write hello response back to device
+Did not receive Sahara hello packet from device
+
+!!!!!!!! WARNING: Flash programmer failed to load trying to continue !!!!!!!!!
+
+
+Programming device using SECTOR_SIZE=512
+
+<?xml version = "1.0" ?><data><configure MemoryName="emmc" ZLPAwareHost="1" SkipStorageInit="0" SkipWrite="0" MaxPayloadSizeToTargetInBytes="1048576"/></data>
+
+Status: 6 The handle is invalid.
+
