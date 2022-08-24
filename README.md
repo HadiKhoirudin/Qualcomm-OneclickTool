@@ -1,6 +1,6 @@
 # Qualcomm-OneclickTool
 
-[![image-2022-08-24-221329959.png](https://i.postimg.cc/L4c1bcCG/image-2022-08-24-221329959.png)](https://postimg.cc/23xyqKfx)
+[![image-2022-08-24-223455765.png](https://i.postimg.cc/MKvbgkSS/image-2022-08-24-223455765.png)](https://postimg.cc/TpvDW417)
 
 ## Recent supported list :
 
