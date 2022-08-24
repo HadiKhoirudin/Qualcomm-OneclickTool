@@ -12,14 +12,9 @@ set SelectedOperation=%2
 
 %emmcdl% -l | findstr "COM" >Port.txt
 for /F "tokens=5 delims=() " %%a in (Port.txt) do (set USBComPort=%%a)
-:: Cleanup
-del /F /Q info.log >nul 2>&1
-del /F /Q partition.xml >nul 2>&1
-del /F /Q patch.xml >nul 2>&1
-del /F /Q tmp.xml >nul 2>&1
 del /F /Q Port.txt >nul 2>&1
 
-IF (%USBComPort%) == () (GOTO :process) ELSE (GOTO :err_process)
+IF (%USBComPort%) == () (GOTO :err_process) ELSE (GOTO :process)
 
 
 :err_process
@@ -42,7 +37,7 @@ echo.
 echo. Connecting To Device...[OK]
 
 :: Get Device Info
-:: %emmcdl% -p %USBComPort% -info >info.log
+%emmcdl% -p %USBComPort% -info >info.log
 for /F "Tokens=2 " %%b in ('findstr /I "SerialNumber" info.log') do (set MSM_ID=%%b)
 set MSM_ID=%MSM_ID:~2,8%
 echo. MSM ID   : %MSM_ID%
@@ -54,6 +49,7 @@ echo. MSM HW : %MSM_HW%
 for /F "Tokens=2 delims=2 " %%d in ('findstr /I "OEM_PK_HASH" info.log') do (set OEM_PK=%%d)
 set OEM_PK=%OEM_PK:~2,16%
 echo. OEM PK  : %OEM_PK%
+del /F /Q info.log >nul 2>&1
 
 echo.
 echo. Configuring Firehose...[OK]
@@ -99,26 +95,38 @@ IF "%SelectedOperation%" == "-reset_safe" (
     for /F "Tokens=2 skip=1 delims=SECTOR_SIZE_IN_BYTES= " %%e in ('findstr /I "SECTOR_SIZE_IN_BYTES" partition.xml') do (type misc.xml | %repl% "(SECTOR_SIZE_IN_BYTES=\q).*?(\q.*>)" $1%%e$2 xi >tmp.xml)
     for /F "Tokens=7 " %%f in ('findstr /I "misc" partition.xml') do (type tmp.xml | %repl% "(start_sector=\q).*?(\q.*>)" "$1%%f$2" xi >patch.xml)
         %emmcdl% -p %USBComPort% -f %Loader% -x patch.xml -memoryname %MemoryName% >nul
-
+del /F /Q partition.xml >nul 2>&1
+del /F /Q tmp.xml >nul 2>&1
+del /F /Q patch.xml >nul 2>&1
 :: Done
 echo. Done! Reset With Safe...
 )
 
 IF "%SelectedOperation%" == "-unlock_bl" (
+:: Get Partition Info
+    %emmcdl% -p %USBComPort% -f %Loader% -gpt -memoryname %MemoryName% >partition.xml
 ::: Partition Devinfo
     for /F "Tokens=2 skip=1 delims=SECTOR_SIZE_IN_BYTES= " %%g in ('findstr /I "SECTOR_SIZE_IN_BYTES" partition.xml') do (type ubl_patch.xml | %repl% "(SECTOR_SIZE_IN_BYTES=\q).*?(\q.*>)" $1%%g$2 xi >tmp.xml)
     for /F "Tokens=7 " %%h in ('findstr /I "devinfo" partition.xml') do (type tmp.xml | %repl% "(start_sector=\q).*?(\q.*>)" "$1%%h$2" xi >patch.xml)
         %emmcdl% -p %USBComPort% -f %Loader% -d devinfo -o %backup%-devinfo.bin -memoryname %MemoryName% >nul
         %emmcdl% -p %USBComPort% -f %Loader% -x patch.xml -memoryname %MemoryName% >nul
+del /F /Q partition.xml >nul 2>&1
+del /F /Q tmp.xml >nul 2>&1
+del /F /Q patch.xml >nul 2>&1
 :: Done
 echo. Done! Bootloader Unlocked...
 )
 
 IF "%SelectedOperation%" == "-relock_bl" (
+:: Get Partition Info
+    %emmcdl% -p %USBComPort% -f %Loader% -gpt -memoryname %MemoryName% >partition.xml
 ::: Partition Devinfo
     for /F "Tokens=2 skip=1 delims=SECTOR_SIZE_IN_BYTES= " %%i in ('findstr /I "SECTOR_SIZE_IN_BYTES" partition.xml') do (type rbl_patch.xml | %repl% "(SECTOR_SIZE_IN_BYTES=\q).*?(\q.*>)" $1%%i$2 xi >tmp.xml)
     for /F "Tokens=7 " %%j in ('findstr /I "devinfo" partition.xml') do (type tmp.xml | %repl% "(start_sector=\q).*?(\q.*>)" "$1%%j$2" xi >patch.xml)
         %emmcdl% -p %USBComPort% -f %Loader% -x patch.xml -memoryname %MemoryName% >nul
+del /F /Q partition.xml >nul 2>&1
+del /F /Q tmp.xml >nul 2>&1
+del /F /Q patch.xml >nul 2>&1
 :: Done
 echo. Done! Bootloader Relocked...
 )
