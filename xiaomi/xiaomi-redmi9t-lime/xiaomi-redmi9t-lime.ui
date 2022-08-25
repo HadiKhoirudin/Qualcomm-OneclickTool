@@ -89,7 +89,7 @@ border-bottom-left-radius: 20px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/images/picture/xiaomi-redmi9-davinci.png);
+     <string notr="true">background-image: url(:/images/picture/xiaomi-redmi9-lime.png);
 background-position: center;
 background-repeat: no-repeat;
 color: rgb(255, 255, 255);

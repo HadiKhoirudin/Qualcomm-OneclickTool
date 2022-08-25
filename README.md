@@ -9,6 +9,11 @@
 +1.  [VIVO Y93         (PD1818F)]
 ```
 
+### 2. XIAOMI
+```
++1.  [XIAOMI REDMI 9T         (LIME)]
+```
+
 Nextime I will commit other device in this repos including Xiaomi device.
 
 Get more & support by

@@ -1,7 +1,7 @@
 <RCC>
   <qresource prefix="images">
     <file>picture/background.png</file>
-    <file>picture/xiaomi-redmi9-davinci.png</file>
     <file>picture/QC.ico</file>
+    <file>picture/xiaomi-redmi9-lime.png</file>
   </qresource>
 </RCC>
