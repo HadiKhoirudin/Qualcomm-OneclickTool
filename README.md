@@ -1,6 +1,6 @@
 # Qualcomm-OneclickTool
 
-[![image-2022-08-24-223455765.png](https://i.postimg.cc/MKvbgkSS/image-2022-08-24-223455765.png)](https://postimg.cc/TpvDW417)
+[![image-2022-08-26-011414548.png](https://i.postimg.cc/mrK7Zb0K/image-2022-08-26-011414548.png)](https://postimg.cc/94tDJjXB)
 
 ## Recent supported list :
 
@@ -12,6 +12,7 @@
 ### 2. XIAOMI
 ```
 +1.  [XIAOMI REDMI 9T         (LIME)]
++2.  [XIAOMI REDMI NOTE 7 (LAVENDER)]
 ```
 
 Nextime I will commit other device in this repos including Xiaomi device.

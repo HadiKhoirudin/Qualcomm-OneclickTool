@@ -2,13 +2,13 @@
 cls
 set datetime=%DATE:~10,4%%DATE:~4,2%%DATE:~7,2%%TIME:~0,2%%TIME:~3,2%
 set datetime=%datetime: =0%
-set backup=%~dp2-%datetime%
-set basedir=%~dp2
-set emmcdl=%~dp2emmcdl.exe
-set Loader=%~dp2loader.elf
+set backup=%~dp0-%datetime%
+set basedir=%~dp0
+set emmcdl=%~dp0emmcdl.exe
+set Loader=%~dp0loader.elf
 set MemoryName=%1
-set reboot=%~dp2boot.xml
-set repl=%~dp2repl.cmd
+set reboot=%~dp0boot.xml
+set repl=%~dp0repl.cmd
 set SelectedOperation=%2
 
 %emmcdl% -l | findstr "COM" >Port.txt
@@ -24,7 +24,7 @@ echo. Error!
 echo. QCUSB Port EDL Not Detected...
 exit
 
-:err_devinfo
+:err_relockbl
 echo.
 echo. Error!
 echo. Can't Relock Bootloader 
@@ -115,6 +115,11 @@ echo.
 )
 
 IF "%SelectedOperation%" == "-unlock_bl" (
+if exist %basedir%devinfo.bin (
+echo. >nul
+) else (
+%emmcdl% -p %USBComPort% -f %Loader% -d devinfo -o devinfo.bin -memoryname %MemoryName% >nul
+)
 :: Get Partition Info
     %emmcdl% -p %USBComPort% -f %Loader% -gpt -memoryname %MemoryName% >partition.xml
 ::: Partition Devinfo
@@ -133,9 +138,11 @@ echo.
 )
 
 IF "%SelectedOperation%" == "-relock_bl" (
-for /F "delims= " %%j in ('where /r %basedir% devinfo.bin') do (set Devinfo=%%j)
-IF (%Devinfo%) == () (GOTO :err_devinfo) ELSE (%emmcdl% -p %USBComPort% -f %Loader% -b devinfo devinfo.bin -memoryname %MemoryName% >nul)
-
+if exist %basedir%devinfo.bin (
+%emmcdl% -p %USBComPort% -f %Loader% -b devinfo devinfo.bin -memoryname %MemoryName% >nul
+) else (
+goto err_relockbl
+)
 :: Done
 echo. Done! Bootloader Relocked...
 echo. Rebooting Device...
