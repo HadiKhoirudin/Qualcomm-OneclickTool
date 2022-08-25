@@ -291,6 +291,7 @@ class Ui_Interface(object):
         self.textEdit.append(string.strip())
 
     def run_command(self, cmd, **kwargs):
+        self.textEdit.clear()
         threading.Thread(
             target=self._execute_command, args=(cmd,), kwargs=kwargs, daemon=True
         ).start()
@@ -301,6 +302,7 @@ class Ui_Interface(object):
         )
         for line in proc.stdout:
             self.logging(line.decode())
+
 
 
 if __name__ == "__main__":

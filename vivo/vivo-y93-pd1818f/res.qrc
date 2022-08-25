@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="images">
+    <file>picture/vivo-y93.png</file>
+    <file>picture/background.png</file>
+    <file>picture/QC.ico</file>
+  </qresource>
+</RCC>
