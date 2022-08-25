@@ -3,6 +3,7 @@ cls
 set datetime=%DATE:~10,4%%DATE:~4,2%%DATE:~7,2%%TIME:~0,2%%TIME:~3,2%
 set datetime=%datetime: =0%
 set backup=%~dp2-%datetime%
+set basedir=%~dp2
 set emmcdl=%~dp2emmcdl.exe
 set Loader=%~dp2loader.elf
 set MemoryName=%1
@@ -21,13 +22,13 @@ IF (%USBComPort%) == () (GOTO :err_process) ELSE (GOTO :process)
 echo.
 echo. Error!
 echo. QCUSB Port EDL Not Detected...
+exit
+
+:err_devinfo
 echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
+echo. Error!
+echo. Can't Relock Bootloader 
+echo. Backup file not found...
 exit
 
 :process
@@ -118,15 +119,9 @@ echo. Done! Bootloader Unlocked...
 )
 
 IF "%SelectedOperation%" == "-relock_bl" (
-:: Get Partition Info
-    %emmcdl% -p %USBComPort% -f %Loader% -gpt -memoryname %MemoryName% >partition.xml
-::: Partition Devinfo
-    for /F "Tokens=2 skip=1 delims=SECTOR_SIZE_IN_BYTES= " %%i in ('findstr /I "SECTOR_SIZE_IN_BYTES" partition.xml') do (type rbl_patch.xml | %repl% "(SECTOR_SIZE_IN_BYTES=\q).*?(\q.*>)" $1%%i$2 xi >tmp.xml)
-    for /F "Tokens=7 " %%j in ('findstr /I "devinfo" partition.xml') do (type tmp.xml | %repl% "(start_sector=\q).*?(\q.*>)" "$1%%j$2" xi >patch.xml)
-        %emmcdl% -p %USBComPort% -f %Loader% -x patch.xml -memoryname %MemoryName% >nul
-del /F /Q partition.xml >nul 2>&1
-del /F /Q tmp.xml >nul 2>&1
-del /F /Q patch.xml >nul 2>&1
+for /F "delims= " %%j in ('where /r %basedir% devinfo.bin') do (set Devinfo=%%j)
+IF (%Devinfo%) == () (GOTO :err_devinfo) ELSE (%emmcdl% -p %USBComPort% -f %Loader% -b devinfo devinfo.bin -memoryname %MemoryName% >nul)
+
 :: Done
 echo. Done! Bootloader Relocked...
 )

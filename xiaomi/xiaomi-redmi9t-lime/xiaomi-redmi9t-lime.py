@@ -306,6 +306,7 @@ class Ui_Interface(object):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
+    QtGui.QFontDatabase.addApplicationFont('data/fonts.otf')
     Interface = QtWidgets.QWidget()
     ui = Ui_Interface()
     ui.setupUi(Interface)
