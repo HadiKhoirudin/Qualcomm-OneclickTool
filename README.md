@@ -13,6 +13,7 @@
 ```
 +1.  [XIAOMI REDMI 9T         (LIME)]
 +2.  [XIAOMI REDMI NOTE 7 (LAVENDER)]
++3.  [XIAOMI REDMI 5          (ROSY)]
 ```
 
 Nextime I will commit other device in this repos including Xiaomi device.
